@@ -91,6 +91,12 @@ if st.button("Add Guest"):
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
             df = pd.concat([df, new_row], ignore_index=True)
+        else:
+            df = new_row
+        df.to_csv(file_path, index=False)
+        st.success(f"Guest '{name}' from {area}, {state} added successfully!")
+    else:
+        st.warning("Please fill in all fields.")
 
 # ---- FOOTER ----
 st.markdown("---")
