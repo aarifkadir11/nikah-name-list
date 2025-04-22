@@ -41,7 +41,7 @@ st.markdown("""
     </audio>
 """, unsafe_allow_html=True)
 
-# ---- GUEST LIST FILE ----
+# ---- FILE PATH ----
 file_path = "guest_list.csv"
 
 # ---- STATE & AREA OPTIONS ----
@@ -62,7 +62,7 @@ state_area = {
     "W.P. Kuala Lumpur": ["Cheras", "Setapak", "Sentul", "Bukit Bintang"],
     "W.P. Labuan": ["Labuan Town", "Victoria"],
     "W.P. Putrajaya": ["Presint 1", "Presint 2", "Presint 3", "Presint 4"],
-    "Other": ["Other Area"]
+    "Other": []
 }
 
 # ---- USER TYPE ----
@@ -70,18 +70,17 @@ user_type = st.sidebar.selectbox("Login as", ["Family Member", "Admin (Me)"])
 
 # ---- GUEST FORM ----
 st.markdown("## ✍️ Add Guest")
-with st.form("form"):
-    name = st.text_input("Guest Name")
-    state = st.selectbox("State", list(state_area.keys()))
+name = st.text_input("Guest Name")
+state = st.selectbox("State", list(state_area.keys()))
 
-    if state == "Other":
-        area = st.text_input("Enter your area")
-    else:
-        area = st.selectbox("Area", state_area[state])
+# --- Dynamic Area Input ---
+if state == "Other":
+    area = st.text_input("Enter your area")
+else:
+    area = st.selectbox("Area", state_area[state])
 
-    submit = st.form_submit_button("Add Guest")
-
-    if submit and name and area:
+if st.button("Add Guest"):
+    if name and area:
         new_row = pd.DataFrame([[name, state, area]], columns=["Name", "State", "Area"])
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
@@ -89,7 +88,9 @@ with st.form("form"):
         else:
             df = new_row
         df.to_csv(file_path, index=False)
-        st.success(f"Guest '{name}' added successfully!")
+        st.success(f"Guest '{name}' from {area}, {state} added successfully!")
+    else:
+        st.warning("Please fill in all fields.")
 
 # ---- ADMIN VIEW ----
 if user_type == "Admin (Me)":
