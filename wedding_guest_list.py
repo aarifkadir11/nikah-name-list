@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import os
 
-# ----- PAGE CONFIG -----
+# ---- PAGE CONFIG ----
 st.set_page_config(page_title="Afifah ❤️ Syafiq Wedding List", layout="centered")
 
-# ----- WEDDING STYLE -----
+# ---- STYLE & MUSIC ----
 st.markdown("""
     <style>
     body {
@@ -28,13 +28,12 @@ st.markdown("""
     }
     </style>
     <div class='main'>
-        <h1>💒 Wedding Guest List</h1>
+        <h1>🕌 Wedding Guest List</h1>
         <h2>Afifah ❤️ Syafiq</h2>
         <h4>27 December 2025</h4>
     </div>
 """, unsafe_allow_html=True)
 
-# ----- MUSIC PLAYER -----
 st.markdown("""
     <audio autoplay loop>
       <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mp3">
@@ -42,47 +41,69 @@ st.markdown("""
     </audio>
 """, unsafe_allow_html=True)
 
-# ----- FILE SETUP -----
+# ---- GUEST LIST FILE ----
 file_path = "guest_list.csv"
 
-# ----- USER TYPE -----
+# ---- STATE & AREA OPTIONS ----
+state_area = {
+    "Johor": ["Johor Bahru", "Batu Pahat", "Muar", "Segamat"],
+    "Selangor": ["Shah Alam", "Petaling Jaya", "Klang"],
+    "Pahang": ["Kuantan", "Temerloh", "Bentong"],
+    "Kedah": ["Alor Setar", "Sungai Petani", "Kulim"],
+    "Other": ["Other Area"]
+}
+
+# ---- USER TYPE ----
 user_type = st.sidebar.selectbox("Login as", ["Family Member", "Admin (Me)"])
 
-# ----- GUEST FORM -----
+# ---- GUEST FORM ----
 st.markdown("## ✍️ Add Guest")
 with st.form("form"):
     name = st.text_input("Guest Name")
-    state = st.selectbox("State", [
-        "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang", "Perak",
-        "Perlis", "Pulau Pinang", "Sabah", "Sarawak", "Selangor", "Terengganu", "W.P. Kuala Lumpur"
-    ])
+    state = st.selectbox("State", list(state_area.keys()))
+    area = st.selectbox("Area", state_area[state])
     submit = st.form_submit_button("Add Guest")
 
     if submit and name:
-        new = pd.DataFrame([[name, state]], columns=["Name", "State"])
+        new_row = pd.DataFrame([[name, state, area]], columns=["Name", "State", "Area"])
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
-            df = pd.concat([df, new], ignore_index=True)
+            df = pd.concat([df, new_row], ignore_index=True)
         else:
-            df = new
+            df = new_row
         df.to_csv(file_path, index=False)
-        st.success(f"Guest '{name}' added!")
+        st.success(f"Guest '{name}' added successfully!")
 
-# ----- ADMIN VIEW -----
+# ---- ADMIN VIEW ----
 if user_type == "Admin (Me)":
-    st.markdown("## 👀 View Guest List (Admin Only)")
-    password = st.text_input("Admin Password", type="password")
+    st.markdown("## 👀 View & Manage Guest List (Admin)")
+    password = st.text_input("Enter Admin Password", type="password")
 
-    if password == "mypassword123":
+    if password == "familysahaja777":
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
-            st.dataframe(df.sort_values("State"))
-            st.download_button("📥 Download List", df.to_csv(index=False), "guest_list.csv")
-        else:
-            st.info("No guests added yet.")
-    elif password:
-        st.error("Wrong password.")
 
-# ----- FOOTER -----
+            # Display table with delete option
+            for i in range(len(df)):
+                col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 1, 1])
+                col1.write(df.iloc[i]["Name"])
+                col2.write(df.iloc[i]["State"])
+                col3.write(df.iloc[i]["Area"])
+                delete = col4.button("🗑️ Delete", key=f"del_{i}")
+                if delete:
+                    df = df.drop(i).reset_index(drop=True)
+                    df.to_csv(file_path, index=False)
+                    st.success("Guest deleted successfully!")
+                    st.experimental_rerun()
+
+            # Download CSV
+            csv = df.to_csv(index=False).encode("utf-8")
+            st.download_button("📥 Download Guest List", csv, "guest_list.csv", "text/csv")
+        else:
+            st.info("No guest data found.")
+    elif password:
+        st.error("Incorrect password.")
+
+# ---- FOOTER ----
 st.markdown("---")
 st.markdown("<center><small>System Create by Aarif</small></center>", unsafe_allow_html=True)
