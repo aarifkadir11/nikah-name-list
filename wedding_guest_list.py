@@ -90,4 +90,12 @@ if st.button("Add Guest"):
         new_row = pd.DataFrame([[name, state, area]], columns=["Name", "State", "Area"])
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
-            df = pd.concat([df, new_row],_
+            df = pd.concat([df, new_row], ignore_index=True)
+
+# ---- FOOTER ----
+st.markdown("---")
+st.markdown("""
+    <div style='text-align: center; font-size: 13px; color: gray;'>
+        System Created by Aarif • Powered by Streamlit
+    </div>
+""", unsafe_allow_html=True)
