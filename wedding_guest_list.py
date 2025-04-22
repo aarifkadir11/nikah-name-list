@@ -46,7 +46,7 @@ file_path = "guest_list.csv"
 
 # ---- STATE & AREA OPTIONS ----
 state_area = {
-    "Johor": ["Johor Bahru", "Batu Pahat", "Muar", "Kluang", "Segamat", "Kota Tinggi, "Kulai", "Tangkak", "Mersing", "Pontian"],
+    "Johor": ["Johor Bahru", "Batu Pahat", "Muar", "Kluang", "Segamat", "Kota Tinggi", "Kulai", "Tangkak", "Mersing", "Pontian"],
     "Kedah": ["Alor Setar", "Sungai Petani", "Kulim", "Langkawi", "Baling"],
     "Kelantan": ["Kota Bharu", "Pasir Mas", "Tanah Merah", "Tumpat", "Machang"],
     "Melaka": ["Melaka Tengah", "Alor Gajah", "Jasin"],
