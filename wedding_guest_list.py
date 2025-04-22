@@ -3,8 +3,7 @@ import pandas as pd
 import os
 
 # ---- PAGE CONFIG ----
-st.set_page_config(
-    page_title="Afifah ❤️ Syafiq Wedding List",
+st.set_page_config(page_title="Afifah ❤️ Syafiq Wedding List",
     layout="centered",
     initial_sidebar_state="auto",
     page_icon="🕌",
