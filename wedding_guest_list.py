@@ -3,7 +3,8 @@ import pandas as pd
 import os
 
 # ---- PAGE CONFIG ----
-st.set_page_config(page_title="Afifah ❤️ Syafiq Wedding List",
+st.set_page_config(
+    page_title="Afifah ❤️ Syafiq Wedding List",
     layout="centered",
     initial_sidebar_state="auto",
     page_icon="🕌",
@@ -89,44 +90,4 @@ if st.button("Add Guest"):
         new_row = pd.DataFrame([[name, state, area]], columns=["Name", "State", "Area"])
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
-            df = pd.concat([df, new_row], ignore_index=True)
-        else:
-            df = new_row
-        df.to_csv(file_path, index=False)
-        st.success(f"Guest '{name}' from {area}, {state} added successfully!")
-    else:
-        st.warning("Please fill in all fields.")
-
-# ---- ADMIN VIEW ----
-if user_type == "Admin (Me)":
-    st.markdown("## 👀 View & Manage Guest List (Admin)")
-    password = st.text_input("Enter Admin Password", type="password")
-
-    if password == "familysahaja777":
-        if os.path.exists(file_path):
-            df = pd.read_csv(file_path)
-
-            # Display table with delete option
-            for i in range(len(df)):
-                col1, col2, col3, col4 = st.columns([3, 2, 2, 1])
-                col1.write(df.iloc[i]["Name"])
-                col2.write(df.iloc[i]["State"])
-                col3.write(df.iloc[i]["Area"])
-                delete = col4.button("🗑️ Delete", key=f"del_{i}")
-                if delete:
-                    df = df.drop(i).reset_index(drop=True)
-                    df.to_csv(file_path, index=False)
-                    st.success("Guest deleted successfully!")
-                    st.experimental_rerun()
-
-            # Download CSV
-            csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Download Guest List", csv, "guest_list.csv", "text/csv")
-        else:
-            st.info("No guest data found.")
-    elif password:
-        st.error("Incorrect password.")
-
-# ---- FOOTER ----
-st.markdown("---")
-st.markdown("<center><small>System Created by Aarif</small></center>", unsafe_allow_html=True)
+            df = pd.concat([df, new_row],_
