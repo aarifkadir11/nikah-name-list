@@ -123,4 +123,4 @@ if user_type == "Admin (Me)":
 
 # ---- FOOTER ----
 st.markdown("---")
-st.markdown("<center><small>System Created with 💖 by Aarif for Afifah & Syafiq</small></center>", unsafe_allow_html=True)
+st.markdown("<center><small>System Created by Aarif</small></center>", unsafe_allow_html=True)
